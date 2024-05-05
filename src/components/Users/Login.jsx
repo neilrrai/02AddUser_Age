@@ -3,18 +3,29 @@ import UserList from "./UserList";
 import Card from "../UI/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button";
+import ErrorModel from "../UI/ErrorModal";
 
 function Login(props) {
   const [enteredUsername, setenteredUsername] = useState("");
   const [enteredAge, setenteredAge] = useState("");
+
+  const [error, setError] = useState();
   const handleFormSubmit = (event) => {
     event.preventDefault();
     if (enteredUsername.trim().length === 0 || enteredAge.trim().length === 0) {
-      alert("Please Enter valid name and age (no empty field allowed)");
+      setError({
+        title: "Invalid Input",
+        message: "Please Enter valid name and age (no empty field allowed)",
+      });
+
       return;
     }
     if (+enteredAge < 1) {
-      alert("Please Enter Valid age");
+      setError({
+        title: "Invalid Age",
+        message: "Please Enter Valid Age(Age>0)",
+      });
+
       return;
     }
     const enteredUserData = {
@@ -37,9 +48,20 @@ function Login(props) {
       setenteredAge(value);
     }
   };
+  const errorHandler = () => {
+    setError(null);
+  };
 
   return (
     <>
+      {error && (
+        <ErrorModel
+          title={error.title}
+          message={error.message}
+          onError={errorHandler}
+        />
+      )}{" "}
+      :
       <Card className={classes.input}>
         <form onSubmit={handleFormSubmit}>
           <label htmlFor="">Username</label>
